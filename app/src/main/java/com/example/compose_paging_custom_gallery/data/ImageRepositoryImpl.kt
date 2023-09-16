@@ -1,4 +1,4 @@
-package com.example.compose_paging_custom_gallery
+package com.example.compose_paging_custom_gallery.data
 
 import android.content.ContentResolver
 import android.content.ContentUris
@@ -6,8 +6,9 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import androidx.compose.ui.geometry.Offset
 import androidx.core.os.bundleOf
+import com.example.compose_paging_custom_gallery.domain.GalleryImage
+import com.example.compose_paging_custom_gallery.domain.ImageRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import javax.inject.Inject
@@ -15,7 +16,7 @@ import javax.inject.Inject
 // ImageRepository 기능 구현
 class ImageRepositoryImpl @Inject constructor(
     @ApplicationContext private val context : Context
-) : ImageRepository{
+) : ImageRepository {
 
     // 버전에 따라서 다른 대응을 해야 한다.
     // 버전 Q는 API 29 이상을 의미하며, 이 경우 접근 uri를 다르게 해야 한다.

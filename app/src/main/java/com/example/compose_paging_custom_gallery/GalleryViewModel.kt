@@ -1,15 +1,21 @@
 package com.example.compose_paging_custom_gallery
 
+import android.graphics.Bitmap
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.example.compose_paging_custom_gallery.GalleryPagingSource.Companion.PAGING_SIZE
+import com.example.compose_paging_custom_gallery.data.GalleryPagingSource
+import com.example.compose_paging_custom_gallery.data.GalleryPagingSource.Companion.PAGING_SIZE
+import com.example.compose_paging_custom_gallery.domain.CroppingImage
+import com.example.compose_paging_custom_gallery.domain.GalleryImage
+import com.example.compose_paging_custom_gallery.domain.ImageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,11 +37,21 @@ class GalleryViewModel @Inject constructor(
     val customGalleryPhotoList : StateFlow<PagingData<GalleryImage>>
         get() = _customGalleryPhotoList.asStateFlow()
 
+    // 폴더 리스트
     private val _folders = mutableStateListOf<Pair<String,String?>>("최근사진" to null)
     private val folders get() = _folders
 
+    // 현재 폴더
     private val _currentFolder = mutableStateOf<Pair<String, String?>>("최근사진" to null)
     private val currentFolder : State<Pair<String, String?>> = _currentFolder
+
+    // 현재 이미지
+    private val _modifyingImage = mutableStateOf<GalleryImage?>(null)
+    val modifyingImage : State<GalleryImage?> = _modifyingImage
+
+    // 선택 이미지 리스트
+    private val _selectedImages = mutableStateListOf<CroppingImage>()
+    val selectedImages: SnapshotStateList<CroppingImage> = _selectedImages
 
     // 페이징 처리 함수
     fun getGalleryPagingImages() = viewModelScope.launch {
@@ -70,4 +86,24 @@ class GalleryViewModel @Inject constructor(
             _folders.add(it.split("/").last() to it)
         }
     }
+
+    // 현재 선택 사진 지정
+    fun setModifyingImage(image : GalleryImage){
+        _modifyingImage.value = image
+    }
+
+    // 새 이미지 추가
+    fun addSelectedImage(id : Long, image : Bitmap) {
+        _selectedImages.add(CroppingImage(id,image))
+    }
+
+    // 선택 이미지 삭제
+    fun removeSelectedImage(id: Long) {
+        val removedImage = _selectedImages.find { it.id == id }
+        removedImage?.let {
+            _selectedImages.remove(removedImage)
+        }
+    }
+
+
 }
