@@ -43,7 +43,7 @@ class GalleryViewModel @Inject constructor(
 
     // 현재 폴더
     private val _currentFolder = mutableStateOf<Pair<String, String?>>("최근사진" to null)
-    private val currentFolder : State<Pair<String, String?>> = _currentFolder
+    val currentFolder : State<Pair<String, String?>> = _currentFolder
 
     // 현재 이미지
     private val _modifyingImage = mutableStateOf<GalleryImage?>(null)
