@@ -18,6 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.compose_paging_custom_gallery.ui.CustomImageCropView
 import com.example.compose_paging_custom_gallery.ui.GalleryTopBar
+import com.example.compose_paging_custom_gallery.ui.component.GalleryItemContent
 import com.example.compose_paging_custom_gallery.ui.component.SelectedImages
 import com.example.compose_paging_custom_gallery.ui.domain.ApplicationState
 
@@ -104,7 +105,15 @@ fun GalleryScreen(
             ){
                 items(pagingItems.itemCount){ index ->
                     pagingItems[index]?.let { galleryImage ->
-                        gal
+                        GalleryItemContent(
+                            galleryImage = galleryImage,
+                            selectedImages = viewModel.selectedImages,
+                            setModifyingImage = {// 이미지 셋
+                            },
+                            removeSelectedImage ={// 이미지 삭제
+
+                            }
+                        )
                     }
                 }
             }
