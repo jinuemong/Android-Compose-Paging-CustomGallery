@@ -16,6 +16,7 @@ import com.example.compose_paging_custom_gallery.data.GalleryPagingSource.Compan
 import com.example.compose_paging_custom_gallery.domain.CroppingImage
 import com.example.compose_paging_custom_gallery.domain.GalleryImage
 import com.example.compose_paging_custom_gallery.domain.ImageRepository
+import com.example.compose_paging_custom_gallery.ui.domain.ImageCropStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -37,9 +38,14 @@ class GalleryViewModel @Inject constructor(
     val customGalleryPhotoList : StateFlow<PagingData<GalleryImage>>
         get() = _customGalleryPhotoList.asStateFlow()
 
+    // 이미지 선택 상태
+    private val _cropStatus = mutableStateOf(ImageCropStatus.WAITING)
+    val cropStatus: State<ImageCropStatus> = _cropStatus
+
+
     // 폴더 리스트
     private val _folders = mutableStateListOf<Pair<String,String?>>("최근사진" to null)
-    private val folders get() = _folders
+    val folders get() = _folders
 
     // 현재 폴더
     private val _currentFolder = mutableStateOf<Pair<String, String?>>("최근사진" to null)
@@ -105,5 +111,8 @@ class GalleryViewModel @Inject constructor(
         }
     }
 
+    fun setCropStatus(status: ImageCropStatus) {
+        _cropStatus.value = status
+    }
 
 }
