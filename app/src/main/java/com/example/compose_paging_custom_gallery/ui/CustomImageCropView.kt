@@ -25,6 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 
 
+
 @Composable
 fun CustomImageCropView(
     modifyingImage : GalleryImage?,
@@ -43,7 +44,7 @@ fun CustomImageCropView(
             modifier = Modifier
                 .fillMaxWidth(1f)
                 .aspectRatio(1f),
-            factory = {context->
+            factory = { context->
                 // https://github.com/naver/android-imagecropview
                 val view = LayoutInflater.from(context).inflate(R.layout.image_crop_view,null)
                 val imageCropView = view.findViewById<ImageCropView>(R.id.image_crop_view)
@@ -52,7 +53,7 @@ fun CustomImageCropView(
                 }
                 imageCropView
             },
-            update = {view ->
+            update = { view ->
                 modifyingImage?.let {
                     view.setImageFilePath(it.filePath)
                 }

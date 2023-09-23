@@ -131,14 +131,14 @@ class ImageRepositoryImpl @Inject constructor(
 
     // 현재 파라미터를 사용해서 쿼리를 반환하는 함수이다.
     // Android 버전에 따라서 다르게 반환해야 하며,
-    // Build.VERSION_CODES.Q인 API 29 이상을 대응해야 한다.
+    // Build.VERSION_CODES.Q인 API 30 이상을 대응해야 한다.
     // 29 이상과 그 외의 경우를 지정하여 쿼리를 반환한다.
     private fun getQuery(
         offset: Int,
         limit: Int,
         selection: String?,
         selectionArgs: Array<String>?,
-    ) = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+    ) = if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q){
         val bundle = bundleOf(
             ContentResolver.QUERY_ARG_OFFSET to offset,
             ContentResolver.QUERY_ARG_LIMIT to limit,

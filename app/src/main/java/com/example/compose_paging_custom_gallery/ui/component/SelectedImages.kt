@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.example.compose_paging_custom_gallery.R
 
@@ -42,7 +43,7 @@ fun SelectedImages(
             selectedImages.map {
                 Box{
                     Image(
-                        painter = rememberImagePainter(it.croppedBitmap),
+                        painter = rememberAsyncImagePainter(it.croppedBitmap),
                         contentDescription = null,
                         modifier = Modifier
                             .size(screenWidth.div(6))

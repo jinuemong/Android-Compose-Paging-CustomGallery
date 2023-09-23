@@ -5,6 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.core.view.WindowInsetsAnimationCompat.Callback.DispatchMode
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
@@ -13,11 +14,13 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.compose_paging_custom_gallery.data.GalleryPagingSource
 import com.example.compose_paging_custom_gallery.data.GalleryPagingSource.Companion.PAGING_SIZE
+import com.example.compose_paging_custom_gallery.di.DispatcherModule
 import com.example.compose_paging_custom_gallery.domain.CroppingImage
 import com.example.compose_paging_custom_gallery.domain.GalleryImage
 import com.example.compose_paging_custom_gallery.domain.ImageRepository
 import com.example.compose_paging_custom_gallery.ui.domain.ImageCropStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,14 +32,16 @@ import javax.inject.Inject
 // 페이징 결과는 Flow 형태로 반환받기 때문에 StateFlow를 통해서 페이징 결과를 보관한다.
 @HiltViewModel
 class GalleryViewModel @Inject constructor(
-    private val imageRepository: ImageRepository
+    private val imageRepository: ImageRepository,
+    // provides 부여
+    @DispatcherModule.IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     private val _customGalleryPhotoList =
         MutableStateFlow<PagingData<GalleryImage>>(PagingData.empty())
 
-    val customGalleryPhotoList : StateFlow<PagingData<GalleryImage>>
-        get() = _customGalleryPhotoList.asStateFlow()
+    val customGalleryPhotoList : StateFlow<PagingData<GalleryImage>> =
+        _customGalleryPhotoList.asStateFlow()
 
     // 이미지 선택 상태
     private val _cropStatus = mutableStateOf(ImageCropStatus.WAITING)
@@ -113,6 +118,10 @@ class GalleryViewModel @Inject constructor(
 
     fun setCropStatus(status: ImageCropStatus) {
         _cropStatus.value = status
+    }
+
+    fun addCroppedImage(secondScreenResult: List<CroppingImage>?) {
+        secondScreenResult?.let { _selectedImages.addAll(it) }
     }
 
 }

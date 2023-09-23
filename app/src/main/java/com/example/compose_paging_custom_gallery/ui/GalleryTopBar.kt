@@ -53,7 +53,6 @@ fun GalleryTopBar(
         )
 
         // 갤러리 선택
-
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
@@ -106,7 +105,7 @@ fun GalleryTopBar(
 
         Text(
             text = "확인",
-            color = if (nothingSelected) Color.Gray.copy(alpha = 70f) else Color.White,
+            color = if (nothingSelected) Color.Gray.copy(alpha = 0.7f) else Color.White,
             modifier = Modifier.clickable {
                 if (!nothingSelected){
                     confirmCropImages() // 선택 이미지 픽

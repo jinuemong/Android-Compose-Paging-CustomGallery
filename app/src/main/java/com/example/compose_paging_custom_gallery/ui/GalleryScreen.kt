@@ -21,6 +21,7 @@ import com.example.compose_paging_custom_gallery.ui.GalleryTopBar
 import com.example.compose_paging_custom_gallery.ui.component.GalleryItemContent
 import com.example.compose_paging_custom_gallery.ui.component.SelectedImages
 import com.example.compose_paging_custom_gallery.ui.domain.ApplicationState
+import com.example.compose_paging_custom_gallery.utils.getCroppedImageFromBackStack
 
 @Composable
 fun GalleryScreen(
@@ -38,6 +39,12 @@ fun GalleryScreen(
     // 컴포지션을 종료하면 취소
     LaunchedEffect(viewModel.currentFolder.value){
         viewModel.getGalleryPagingImages()
+    }
+    LaunchedEffect(Unit) {
+        val secondScreenResult =
+            getCroppedImageFromBackStack(appState.navController.previousBackStackEntry)
+        viewModel.addCroppedImage(secondScreenResult)
+        viewModel.getFolder()
     }
 
     Column(
@@ -108,10 +115,11 @@ fun GalleryScreen(
                         GalleryItemContent(
                             galleryImage = galleryImage,
                             selectedImages = viewModel.selectedImages,
-                            setModifyingImage = {// 이미지 셋
+                            setModifyingImage = { image->// 이미지 셋
+                                viewModel.setModifyingImage(image)
                             },
-                            removeSelectedImage ={// 이미지 삭제
-
+                            removeSelectedImage ={ id->// 이미지 삭제
+                                viewModel.removeSelectedImage(id)
                             }
                         )
                     }
